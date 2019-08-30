@@ -2,8 +2,7 @@
 
 ### Folder structure
 
-* dist
-* node_modules
+Server:
 * src
     * custom
         * authentication
@@ -11,6 +10,11 @@
             * passport.ts
         * helperFunctions
             * errorHandler.ts 
+        * validators
+            * categoryValidator.ts
+            * departmentValidator.ts
+            * productValidator.ts
+            * profileValidator.ts
     * db
         * conn.ts
     * factories
@@ -30,6 +34,9 @@
         * authController.ts
         * customerController.ts
         * productController.ts 
+        * departmentController.ts
+        * attributeController.ts
+        * categoryController.ts
     * statics
     * app.ts
     * server.ts
@@ -43,7 +50,7 @@
 
 ## About Express and app.ts
 
-I used Express. Was considering Koa but I think Express is more polished. 
+I used Express.
 In app.ts I wrote simple express setup. I used class because I am using Typescript so i thought it's more readable.
 
 ## About server.ts
@@ -53,7 +60,7 @@ I am also doing import statement on ./custom/authentication/passport, not import
 
 ## About statics
 
-Big challange for me was doing Typescript with Sequelize. I managed to do something and it's located in ./statics/[any_file].
+I was doing Typescript with Sequelize. I managed to do something and it's located in ./statics/[any_file].
 Statics are created from factories in ROOT/factories/[any_file].
 I called them statics because they are like static methods in classes.
 Statics return Sequelize instances. They also have their methods.
@@ -75,3 +82,29 @@ Also, I created errorHandler function that is located in ROOT/custom/helperFunct
 This function wraps a lot of routes and it's different based on NODE_ENV.
 *If it's development, nicely formatted error is sent in json format, providing exact error information.*
 *If It's production, this error handler will not show exact error but instead generic error message.*
+
+
+Client:
+* src
+    * actions
+        * -> list of actions
+    * components
+        * -> list of components
+    * reducers
+        * -> list of reducers 
+    * selectors
+        * calculate_rating.js
+        * product_list_filter.js
+    * App.js
+    * fetch.js
+    * formatData.js
+    * index.js
+    * store.js
+    * types.js
+* .gitignore
+* package.json
+* package-lock.json
+* .babelrc
+* webpack.config.js
+
+
