@@ -111,12 +111,9 @@ router.get('/products/search', async(request:Request, response:Response, next:Ne
 
 		const {page, limit, offset, descriptionLength} = extractProductParams(request);
 
-		const queryString: string = request.query.queryString;
-		let allWord: any = request.query.allWord || true;
+		const queryString = <string>request.query.queryString;
+		const allWord = request.query.allWord === 'true';
 
-		if(typeof allWord === 'string') {
-			allWord = allWord === 'true';
-		}
 		let products : {count: number, rows: ProductModel[]};
 
 		//Where is optional and depends on what queryString is
