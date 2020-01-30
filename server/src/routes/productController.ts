@@ -14,7 +14,7 @@ import { validationResult } from 'express-validator';
 import productValidator from '../custom/validators/productValidator';
 import fs from 'fs';
 import path from 'path';
-import { extractProductParams } from '../utils/extractProductParams.util'
+import { extractProductParams } from '../utils/extractProductParams.util';
 import multer from 'multer';
 
 const diskStorage: multer.DiskStorageOptions = {
