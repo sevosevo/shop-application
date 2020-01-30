@@ -14,7 +14,7 @@ import { validationResult } from 'express-validator';
 import productValidator from '../custom/validators/productValidator';
 import fs from 'fs';
 import path from 'path';
-
+import { extractProductParams } from '../utils/extractProductParams.util'
 import multer from 'multer';
 
 const diskStorage: multer.DiskStorageOptions = {
@@ -50,21 +50,9 @@ const router = express.Router();
 */
 router.get('/products', async(request:Request, response:Response, next:NextFunction) => {
 	try{
-		const page  = parseInt(request.query.page) || 1;
-		const limit = parseInt(request.query.limit) || request.app.get('LIMIT');
-		const offset = (page - 1) * limit
-		//Our backend endpoint is doing cropping of description
-		//By default it will crop all descriptions with chars length more then 20
 
-		let descriptionLength = request.query.descriptionLength || 20;
-
-		if(isNaN(parseInt(descriptionLength))) {
-			const error: Error = {code: 'PRD_02', message: 'Description length must be a number', status: 422, field: 'descriptionLength'};
-			return response.status(422).json(error);
-		}else if(typeof descriptionLength === 'string'){
-			descriptionLength = parseInt(descriptionLength);
-			//Now we know description length is a number;
-		}
+		let {page, limit, offset, descriptionLength} = extractProductParams(request);
+		
 		//What should returned json look like
 		let products : {count: number, rows: ProductModel[]};
 
@@ -119,28 +107,16 @@ router.get('/products', async(request:Request, response:Response, next:NextFunct
 */
 router.get('/products/search', async(request:Request, response:Response, next:NextFunction) => {
 	try{
+
+
+		const {page, limit, offset, descriptionLength} = extractProductParams(request);
+
 		const queryString: string = request.query.queryString;
-		let allWord: any = request.query.allWord;
-		const page: number  = parseInt(request.query.page) || 1; //Always a number
-		const limit : number = parseInt(request.query.limit) || request.app.get('LIMIT');
-		const offset : number = (page - 1) * limit;
-		//Our backend endpoint is doing cropping of description
-		//By default it will crop all descriptions with chars length more than 20
-		let descriptionLength = request.query.descriptionLength || 20;
-		
-		if(isNaN(parseInt(descriptionLength))) {
-			const error: Error = {code: 'PRD_02', message: 'Description length must be a number', status: 422, field: 'descriptionLength'};
-			return response.status(422).json(error);
-		}else if(typeof descriptionLength === 'string'){
-			descriptionLength = parseInt(descriptionLength);
-		}
-		//If user didn't send allWord, assume it's true
-		if(typeof allWord === 'undefined'){
-			allWord = true;
-		}else if(typeof allWord === 'string'){
+		let allWord: any = request.query.allWord || true;
+
+		if(typeof allWord === 'string') {
 			allWord = allWord === 'true';
 		}
-		console.log(allWord);
 		let products : {count: number, rows: ProductModel[]};
 
 		//Where is optional and depends on what queryString is
@@ -453,8 +429,6 @@ async(request:Request, response:Response, next:NextFunction) => {
 			attribute3,
 			category
 		} = request.body;
-
-		console.log(name, description, discountedPrice, price);
 
 		const { image, image2, thumbnail }: any = request.files; //Get files information
 
